@@ -1,17 +1,55 @@
-import React from 'react';
+import React,{createContext} from 'react';
+import App from './Component/App';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import {createStore,applyMiddleware} from 'redux';
+import rootReducer from './reducers';
+import thunk from 'redux-thunk'
+
+
+
+
+// store.dispatch({
+//   type:'ADD_MOVIES',
+//   movies:[{name:'Superman'}]
+// })
+
+// store.dispatch({
+//   type:'ADD_MOVIES',
+//   movies:[{name:'Batman'}]
+// })
+
+// const thunk=({dispatch,getstate})=>(next)=>(action)=>{
+//  if(typeof action ==='function'){
+//    action(dispatch)
+//    return
+//  }
+//   next(action)
+// }
+const logger=({dispatch,getstate})=>(next)=>(action)=>{
+  if(typeof action!=='function'){
+    console.log("ACTION TYPE : ",action.type);
+  }
+  next(action)
+}
+const store=createStore(rootReducer,applyMiddleware(logger,thunk));
+export const StoreContext=createContext();
+console.log('')
+class Provider extends React.Component{
+  render(){
+    const {store}=this.props
+return <StoreContext.Provider value={store}>
+       {this.props.children}
+   </StoreContext.Provider>
+  }
+}
+// console.log("store",store);
+// console.log("STATE",store.getState());
+// console.log('after dispatch', store.getState());
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+   <Provider store={store}>
+    <App store={store}/>
+    </Provider>,
   document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
