@@ -2,7 +2,7 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
 
-name: Build and deploy Node.js app to Azure Web App - E-kart
+name: Build and deploy Node.js app to Azure Web App - homekart
 
 on:
   push:
@@ -55,7 +55,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'E-kart'
+          app-name: 'homekart'
           slot-name: 'production'
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile_18ce5d36797c44b38676369d80b244bc }}
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_051edf9add1549528964ad763503f369 }}
           package: .
