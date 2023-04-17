@@ -64,4 +64,4 @@ jobs:
           app-name: 'homekart'
           slot-name: 'production'
           publish-profile: ${{ secrets.AzureAppService_PublishProfile_051edf9add1549528964ad763503f369 }}
-          package: .
+          package: ./build/.
