@@ -27,18 +27,11 @@ jobs:
           npm install
           npm run build --if-present
 
-    
-      - name: Zip Release
-
-        uses: TheDoctor0/zip-release@0.7.1
-        with:
-          filename: release.zip
-          path: ./build/.
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: release.zip
+          path: build
        
      
   deploy:
@@ -54,9 +47,7 @@ jobs:
         with:
           name: node-app
       
-      - name: unzip artifact for deployment
-        run: unzip release.zip
-          
+
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
@@ -64,4 +55,4 @@ jobs:
           app-name: 'homekart'
           slot-name: 'production'
           publish-profile: ${{ secrets.AzureAppService_PublishProfile_051edf9add1549528964ad763503f369 }}
-          package: ./build/.
+          package: .
