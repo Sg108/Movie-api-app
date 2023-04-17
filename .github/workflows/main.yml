@@ -54,7 +54,9 @@ jobs:
         with:
           name: node-app
       
-
+      - name: unzip artifact for deployment
+        run: unzip release.zip
+          
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
@@ -62,4 +64,4 @@ jobs:
           app-name: 'homekart'
           slot-name: 'production'
           publish-profile: ${{ secrets.AzureAppService_PublishProfile_051edf9add1549528964ad763503f369 }}
-          package: release.zip
+          package: .
