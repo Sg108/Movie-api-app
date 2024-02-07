@@ -1,12 +1,14 @@
 
 
 import React from 'react';
-import {data} from '../data';
+//import {data} from '../data';
 import Navbar from './Navbar';
 import MovieCard from './MovieCard'
 import {addMovies,setShowFavourite} from '../actions'
 import {StoreContext} from '../index';
-console.log(data)
+import {PacmanLoader} from "react-spinners";
+//require('dotenv').config()
+//console.log(localStorage.data)
 class App extends React.Component{
   componentDidMount (){
     const {store}=this.props;
@@ -14,12 +16,20 @@ class App extends React.Component{
       console.log('UPDATED');
       this.forceUpdate();
     })
-    store.dispatch(addMovies(data))
+   // console.log("ismount")
+    if(!localStorage.data)
+    localStorage.data=JSON.stringify([]);
+    if(!localStorage.favData)
+    localStorage.favData=JSON.stringify([]);
+    store.dispatch(addMovies(JSON.parse(localStorage.data)))
   }
   isMovieFavourite=(movie)=>{
    const {movies}=this.props.store.getState();
-    const index=movies.favourites.indexOf(movie)
-    if(index!==-1){
+  // console.log("isfav")
+  //console.log(movies.favourites)
+    const fav = movies.favourites.find(x=>x.image===movie.image)
+   // console.log(index)
+    if(fav){
       return true
     }
     return false
@@ -32,13 +42,18 @@ class App extends React.Component{
     const {movies,search}=this.props.store.getState();
     const { list ,favourites,showFavourites}=movies
     console.log('RENDER',this.props.store.getState())
+    console.log(search.loading) 
     const displayMovies=showFavourites?favourites:list 
   return(
+   
        <div className="App">
+       {search.loading && <div className='loading'>
+        <PacmanLoader color="hsla(227, 67%, 53%, 1)" size="40px"  />
+        </div>}
        <Navbar search={search}/>
        <div className="main">
          <div className="tabs">
-           <div className={`tab ${showFavourites ? '':'active-tabs'}`} onClick={()=>this.onChangeTab(false)}>Movies</div>
+           <div className={`tab ${showFavourites ? '':'active-tabs'}`} onClick={()=>this.onChangeTab(false)}>Saved Images</div>
            <div className={`tab ${showFavourites ? 'active-tabs':''}`} onClick={()=>this.onChangeTab(true)}>Favourites</div>
          </div>
  
@@ -46,6 +61,7 @@ class App extends React.Component{
              {
                displayMovies.map((movie,index)=>{
                 return <MovieCard movie={movie} 
+                showFavourites={showFavourites}
                 key={`movie-${index}`} 
                 dispatch={this.props.store.dispatch}
                 isFavourite={this.isMovieFavourite(movie)}/>
@@ -54,11 +70,13 @@ class App extends React.Component{
          </div>
  
        </div>
+      
      </div>
    
-  
+            )
+            
 
-    )
+    
     
     
   }

@@ -1,7 +1,7 @@
 import React from 'react';
 import {StoreContext} from '../index';
 // import {data} from '../data';
-import {addMovieToList,handleMoviesSearch} from '../actions';
+import {addMovieToList,handleMoviesSearch,closeResults,addLoader} from '../actions';
 
 class Navbar extends React.Component{
 
@@ -13,15 +13,24 @@ class Navbar extends React.Component{
   }
 
   handleAddToMovies=(movie)=>{
-    this.props.dispatch(addMovieToList(movie))
-    this.setState({
-      showSearchResults:false
-    })
+    movie.description=this.state.searchText;
+   this.props.dispatch(addMovieToList(movie))
+    // this.setState({
+    //   showSearchResults:fals
+    // })
   }
- 
+  closeSearchResults=()=>{
+    const {showSearchResults}=this.props.search;
+    if(showSearchResults)
+    {
+    this.props.dispatch(closeResults())
+    }
+    
+  }
   handleSearch=()=>{
     const {searchText}=this.state;
-
+    this.props.dispatch(addLoader());
+    console.log("p")
     this.props.dispatch(handleMoviesSearch(searchText));
   }
 
@@ -34,26 +43,27 @@ class Navbar extends React.Component{
   render(){
     // const {showSearchResults}=this.state;
     const {result:movie,showSearchResults}=this.props.search;
-    // console.log(movie);
     return (
-        <div className="nav">
+        <div className="nav"  onClick={this.closeSearchResults}>
           <div className="search-container">
               <input onChange={this.handleChange}/>
               <button id="search-btn" onClick={this.handleSearch}>Search</button>
-              {
+              
+              {  
                 showSearchResults && 
                 <div className="search-results">
                   <div className="search-result">
-                    <img src={movie.Poster} alt="search-pic" />
+                    <img src={movie.image_resource_url} alt="search-pic" />
                     <div className="movie-info">
                       <span>{movie.Title}</span>
                       <button onClick={()=>this.handleAddToMovies(movie)}>
-                        Add to Movies
+                        Save Image
                       </button>
                     </div>
                   </div>
                 </div>
-              }
+                
+               } 
           </div>
         </div>
       );
