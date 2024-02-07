@@ -78,7 +78,7 @@ export function handleMoviesSearch(movie){
     //  .then(res=>{console.log(res)
     //   dispatch(addMovieSearchResult(res))    
     // })}
-    //console.log('process :',process.env)
+    console.log('process :',process.env.REACT_APP_API_KEY)
     const options = {
         method: 'POST',
         headers: {Authorization:`Bearer ${process.env.REACT_APP_API_KEY}`,accept: 'application/json', 'content-type': 'application/json'},
